@@ -11,14 +11,12 @@ public class Product {
     private String batchNumber;
     private LocalDate productionDate;
     private ProductStatus status;
-    private Integer baseRecipeID;
-    private String baseRecipeName;
+    private Recipe baseRecipe;
 
     public Product(String productID, String name, Recipe recipe) {
         this.productID = productID;
         this.name = name;
-        this.baseRecipeID = recipe.getRecipeID();
-        this.baseRecipeName = recipe.getName();
+        this.baseRecipe = recipe;
         this.productionDate = LocalDate.now();
         this.status = ProductStatus.IN_DEVELOPMENT;
     }
@@ -48,6 +46,5 @@ public class Product {
     public ProductStatus getStatus() { return status; }
     public String getProductID() { return productID; }
     public String getName() { return name; }
-    public Integer getBaseRecipeID() { return baseRecipeID; }
-    public String getBaseRecipeName() { return baseRecipeName; }
+    public Recipe getBaseRecipe() { return baseRecipe; }
 }
