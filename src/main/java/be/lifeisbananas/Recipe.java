@@ -66,7 +66,7 @@ public class Recipe {
         if (status != RecipeStatus.APPROVED) {
             throw new IllegalStateException("Can only create a product from an APPROVED recipe");
         }
-        return new Product(productID, productName, this.name);
+        return new Product(productID, productName, this);
     }
 
     // getters
