@@ -43,6 +43,13 @@ public class Product {
         }
     }
 
+    public void reject() {
+        if (status != ProductStatus.TESTED) {
+            throw new IllegalStateException("Can only reject a product that is TESTED");
+        }
+        status = ProductStatus.REJECTED;
+    }
+
     public ProductStatus getStatus() { return status; }
     public String getProductID() { return productID; }
     public String getName() { return name; }
