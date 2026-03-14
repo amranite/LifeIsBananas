@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class CucumberStepDefinitions {
 
-    // ── shared state within one scenario ────────────────────────────────────
     private ServiceImpl service;
     private String lastResult;
     private Exception thrownException;
@@ -39,12 +38,12 @@ public class CucumberStepDefinitions {
                 break;
             case "TESTING":
                 service.getRecipeByID(1).addIngredient(bananaIngredient);
-                service.submitForTesting(); // DRAFT → TESTING
+                service.submitForTesting();
                 break;
             case "APPROVED":
                 service.getRecipeByID(1).addIngredient(bananaIngredient);
-                service.submitForTesting(); // DRAFT → TESTING
-                service.approve();          // TESTING → APPROVED
+                service.submitForTesting();
+                service.approve();
                 break;
             default:
                 throw new IllegalArgumentException("Unknown recipe status: " + targetStatus);
@@ -71,8 +70,8 @@ public class CucumberStepDefinitions {
     public void aProductHasStatus(String targetStatus) {
         service.addRecipe(99, "Base Recipe", "1.0");
         service.getRecipeByID(99).addIngredient(bananaIngredient);
-        service.submitForTesting(); // DRAFT → TESTING
-        service.approve();          // TESTING → APPROVED
+        service.submitForTesting();
+        service.approve();
         service.addProduct("PROD-001", "Test Product");
 
         switch (targetStatus) {
@@ -114,12 +113,8 @@ public class CucumberStepDefinitions {
 
     @When("the bio-engineer rejects the recipe")
     public void theBioEngineerRejectsTheRecipe() {
-        try {
-            service.reject();
-            lastResult = "Recipe is REJECTED";
-        } catch (IllegalStateException e) {
-            lastResult = e.getMessage();
-        }
+        // FIX 1: reject() now returns a message instead of throwing
+        lastResult = service.reject();
     }
 
     @When("the bio-engineer tries to add an ingredient")
@@ -161,12 +156,7 @@ public class CucumberStepDefinitions {
 
     @When("the bio-engineer rejects the product")
     public void theBioEngineerRejectsTheProduct() {
-        try {
-            service.reject();
-            lastResult = "Product is REJECTED";
-        } catch (IllegalStateException e) {
-            lastResult = e.getMessage();
-        }
+        lastResult = service.reject();
     }
 
     @When("the bio-engineer launches the product into production")
@@ -181,7 +171,7 @@ public class CucumberStepDefinitions {
 
     @When("the bio-engineer attempts to launch the product again")
     public void theBioEngineerAttemptsToLaunchTheProductAgain() {
-        lastResult = service.getProductByID("PROD-001").promote();
+        lastResult = service.getCurrentProduct().promote();
     }
 
     // ── THEN: recipe assertions ───────────────────────────────────────────────
@@ -222,14 +212,14 @@ public class CucumberStepDefinitions {
 
     @Then("the product status should change to {string}")
     public void theProductStatusShouldChangeTo(String expectedStatus) {
-        assertEquals(ProductStatus.valueOf(expectedStatus),
-                service.getProductByID("PROD-001").getStatus());
+        assertNotNull(service.getCurrentProduct(), "No active product found");
+        assertEquals(ProductStatus.valueOf(expectedStatus), service.getCurrentProduct().getStatus());
     }
 
     @Then("the product status should remain {string}")
     public void theProductStatusShouldRemain(String expectedStatus) {
-        assertEquals(ProductStatus.valueOf(expectedStatus),
-                service.getProductByID("PROD-001").getStatus());
+        assertNotNull(service.getCurrentProduct(), "No active product found");
+        assertEquals(ProductStatus.valueOf(expectedStatus), service.getCurrentProduct().getStatus());
     }
 
     @Then("the product rejection should fail with message {string}")
@@ -244,15 +234,13 @@ public class CucumberStepDefinitions {
 
     @Then("a product with status {string} should be returned")
     public void aProductWithStatusShouldBeReturned(String expectedStatus) {
-        Product product = service.getProductByID("PROD-001");
-        assertNotNull(product, "Expected a product to be created");
-        assertEquals(ProductStatus.valueOf(expectedStatus), product.getStatus());
+        assertNotNull(service.getCurrentProduct(), "Expected a product to be created");
+        assertEquals(ProductStatus.valueOf(expectedStatus), service.getCurrentProduct().getStatus());
     }
 
     @Then("the product should be linked to the recipe")
     public void theProductShouldBeLinkedToTheRecipe() {
-        Product product = service.getProductByID("PROD-001");
-        assertNotNull(product.getBaseRecipe(), "Product should have a linked recipe");
-        assertEquals(1, product.getBaseRecipe().getRecipeID());
+        assertNotNull(service.getCurrentProduct().getBaseRecipe(), "Product should have a linked recipe");
+        assertEquals(1, service.getCurrentProduct().getBaseRecipe().getRecipeID());
     }
 }

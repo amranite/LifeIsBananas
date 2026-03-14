@@ -45,14 +45,9 @@ public class ServiceImpl {
         throw new IllegalStateException("Nothing to approve in the current state");
     }
 
-    public void reject() {
-        if (currentProduct != null && currentProduct.getStatus() == ProductStatus.TESTED) {
-            currentProduct.reject();
-            return;
-        }
-        if (currentRecipe != null && currentRecipe.getStatus() == RecipeStatus.TESTING) {
-            currentRecipe.reject();
-            return;
+    public String reject() {
+        if (currentProduct != null) {
+            return currentProduct.reject();
         }
         throw new IllegalStateException("Nothing to reject in the current state");
     }
@@ -62,7 +57,7 @@ public class ServiceImpl {
             throw new IllegalStateException("No active recipe");
         }
         if (currentRecipe.getStatus() != RecipeStatus.DRAFT) {
-            throw new IllegalStateException("Can only add ingredients to a DRAFT recipe");
+            throw new IllegalStateException("locked");
         }
     }
 
@@ -78,7 +73,6 @@ public class ServiceImpl {
         throw new IllegalStateException("Nothing to delete");
     }
 
-
     public void addProduct(String productID, String productName) {
         if (currentRecipe == null || currentRecipe.getStatus() != RecipeStatus.APPROVED) {
             throw new IllegalStateException("Can only create a product from an APPROVED recipe");
@@ -86,12 +80,15 @@ public class ServiceImpl {
         this.currentProduct = currentRecipe.createProduct(productID, productName);
     }
 
-
     public Product getProductByID(String id) {
         if (currentProduct != null && currentProduct.getProductID().equals(id)) {
             return currentProduct;
         }
         return null;
+    }
+
+    public Product getCurrentProduct() {
+        return currentProduct;
     }
 
     public void launch() {
