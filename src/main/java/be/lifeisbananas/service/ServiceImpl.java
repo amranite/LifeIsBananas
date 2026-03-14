@@ -49,6 +49,9 @@ public class ServiceImpl {
         if (currentProduct != null) {
             return currentProduct.reject();
         }
+        if (currentRecipe != null) {
+            return currentRecipe.reject();
+        }
         throw new IllegalStateException("Nothing to reject in the current state");
     }
 
