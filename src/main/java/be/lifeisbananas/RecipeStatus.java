@@ -1,5 +1,5 @@
 package be.lifeisbananas;
 
 public enum RecipeStatus {
-    DRAFT, TESTING, APPROVED, REJECTED
+    DRAFT, TESTING, REJECTED, APPROVED
 }

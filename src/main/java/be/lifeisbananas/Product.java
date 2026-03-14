@@ -22,8 +22,7 @@ public class Product {
     }
 
     /**
-     * Promote product to the next status.
-     *
+     * Promote product to next status
      * @return message describing the result of the promotion attempt
      */
     public String promote() {
@@ -39,39 +38,20 @@ public class Product {
                 return "Product is now IN_PRODUCTION";
             case IN_PRODUCTION:
                 return "Product is already IN_PRODUCTION and cannot be promoted further";
-            case REJECTED:
-                return "Cannot promote: product is REJECTED";
             default:
                 return "Unknown status";
         }
     }
 
-    /**
-     * Reject this product (only allowed from TESTED).
-     *
-     * @return message describing the result of the rejection attempt
-     */
-    public String reject() {
-        switch (status) {
-            case TESTED:
-                status = ProductStatus.REJECTED;
-                return "Product is REJECTED";
-            case IN_DEVELOPMENT:
-                return "Cannot reject: product is still IN_DEVELOPMENT";
-            case APPROVED:
-                return "Cannot reject: product is already APPROVED";
-            case IN_PRODUCTION:
-                return "Cannot reject: product is already IN_PRODUCTION";
-            case REJECTED:
-                return "Cannot reject: product is already REJECTED";
-            default:
-                return "Unknown status";
+    public void reject() {
+        if (status != ProductStatus.TESTED) {
+            throw new IllegalStateException("Can only reject a product that is TESTED");
         }
+        status = ProductStatus.REJECTED;
     }
 
-    // getters
-    public ProductStatus getStatus()   { return status; }
-    public String getProductID()       { return productID; }
-    public String getName()            { return name; }
-    public Recipe getBaseRecipe()      { return baseRecipe; }
+    public ProductStatus getStatus() { return status; }
+    public String getProductID() { return productID; }
+    public String getName() { return name; }
+    public Recipe getBaseRecipe() { return baseRecipe; }
 }
