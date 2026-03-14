@@ -64,7 +64,6 @@ public class ServiceImpl {
         if (currentRecipe.getStatus() != RecipeStatus.DRAFT) {
             throw new IllegalStateException("Can only add ingredients to a DRAFT recipe");
         }
-        // Voeg ingredient toe aan huidig recipe
     }
 
     public void delete() {
@@ -79,10 +78,16 @@ public class ServiceImpl {
         throw new IllegalStateException("Nothing to delete");
     }
 
-    public void addProduct(String p001, String bananaProduct) {
+
+    public void addProduct(String productID, String productName) {
+        if (currentRecipe == null || currentRecipe.getStatus() != RecipeStatus.APPROVED) {
+            throw new IllegalStateException("Can only create a product from an APPROVED recipe");
+        }
+        this.currentProduct = currentRecipe.createProduct(productID, productName);
     }
 
-    public Product getProductByID(int id) {
+
+    public Product getProductByID(String id) {
         if (currentProduct != null && currentProduct.getProductID().equals(id)) {
             return currentProduct;
         }

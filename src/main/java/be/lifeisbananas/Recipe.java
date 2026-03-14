@@ -99,13 +99,6 @@ public class Recipe {
         return new Product(productID, productName, this);
     }
 
-    public void reject() {
-        if (status != RecipeStatus.TESTING) {
-            throw new IllegalStateException("Can only reject a recipe that is in TESTING");
-        }
-        status = RecipeStatus.REJECTED;
-    }
-
     // getters
     public RecipeStatus getStatus()        { return status; }
     public Integer getRecipeID()           { return recipeID; }

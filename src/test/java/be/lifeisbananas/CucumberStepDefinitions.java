@@ -1,5 +1,6 @@
 package be.lifeisbananas;
 
+import be.lifeisbananas.service.ServiceImpl;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 
@@ -7,31 +8,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Cucumber step definitions for recipe and product lifecycle scenarios.
- * All steps live in one class per project requirement.
  */
 public class CucumberStepDefinitions {
 
     // ── shared state within one scenario ────────────────────────────────────
-    private LifeIsBananasServiceImpl service;
-    private Recipe recipe;
-    private Product product;
-    private String lastRecipeResult;
-    private String lastProductResult;
+    private ServiceImpl service;
+    private String lastResult;
     private Exception thrownException;
+    private Ingredient bananaIngredient;
 
-    // default test data
     private static final RawMaterial BANANA =
             new RawMaterial("RM-001", "Banana", true, 1.50, UnitType.KILOGRAM);
-    private static final Ingredient BANANA_INGREDIENT =
-            new Ingredient(200, UnitType.GRAM, 1, BANANA);
 
     @Before
     public void setUp() {
-        service = new LifeIsBananasServiceImpl();
-        recipe = null;
-        product = null;
-        lastRecipeResult = null;
-        lastProductResult = null;
+        service = new ServiceImpl();
+        bananaIngredient = new Ingredient(200, UnitType.GRAM, 1, BANANA);
+        lastResult = null;
         thrownException = null;
     }
 
@@ -39,20 +32,19 @@ public class CucumberStepDefinitions {
 
     @Given("a recipe has status {string}")
     public void aRecipeHasStatus(String targetStatus) {
-        recipe = new Recipe(1, "Test Recipe", "1.0");
+        service.addRecipe(1, "Test Recipe", "1.0");
 
         switch (targetStatus) {
             case "DRAFT":
-                // freshly created → already DRAFT, no ingredients added yet
                 break;
             case "TESTING":
-                recipe.addIngredient(BANANA_INGREDIENT);
-                recipe.promote(); // DRAFT → TESTING
+                service.getRecipeByID(1).addIngredient(bananaIngredient);
+                service.submitForTesting(); // DRAFT → TESTING
                 break;
             case "APPROVED":
-                recipe.addIngredient(BANANA_INGREDIENT);
-                recipe.promote(); // DRAFT → TESTING
-                recipe.promote(); // TESTING → APPROVED
+                service.getRecipeByID(1).addIngredient(bananaIngredient);
+                service.submitForTesting(); // DRAFT → TESTING
+                service.approve();          // TESTING → APPROVED
                 break;
             default:
                 throw new IllegalArgumentException("Unknown recipe status: " + targetStatus);
@@ -61,16 +53,15 @@ public class CucumberStepDefinitions {
 
     @Given("the recipe has at least one ingredient")
     public void theRecipeHasAtLeastOneIngredient() {
-        // Only add if not already added (e.g. TESTING / APPROVED paths already added one)
+        Recipe recipe = service.getRecipeByID(1);
         if (recipe.getIngredients().isEmpty()) {
-            recipe.addIngredient(BANANA_INGREDIENT);
+            recipe.addIngredient(bananaIngredient);
         }
     }
 
     @Given("the recipe has no ingredients")
     public void theRecipeHasNoIngredients() {
-        // Nothing to do: recipe is already created without ingredients
-        assertTrue(recipe.getIngredients().isEmpty(),
+        assertTrue(service.getRecipeByID(1).getIngredients().isEmpty(),
                 "Expected recipe to have no ingredients");
     }
 
@@ -78,28 +69,26 @@ public class CucumberStepDefinitions {
 
     @Given("a product has status {string}")
     public void aProductHasStatus(String targetStatus) {
-        // Build an approved recipe to create the product from
-        Recipe approvedRecipe = new Recipe(99, "Base Recipe", "1.0");
-        approvedRecipe.addIngredient(BANANA_INGREDIENT);
-        approvedRecipe.promote(); // DRAFT → TESTING
-        approvedRecipe.promote(); // TESTING → APPROVED
-
-        product = approvedRecipe.createProduct("PROD-001", "Test Product");
+        service.addRecipe(99, "Base Recipe", "1.0");
+        service.getRecipeByID(99).addIngredient(bananaIngredient);
+        service.submitForTesting(); // DRAFT → TESTING
+        service.approve();          // TESTING → APPROVED
+        service.addProduct("PROD-001", "Test Product");
 
         switch (targetStatus) {
             case "IN_DEVELOPMENT":
                 break;
             case "TESTED":
-                product.promote(); // IN_DEVELOPMENT → TESTED
+                service.submitForTesting();
                 break;
             case "APPROVED":
-                product.promote(); // IN_DEVELOPMENT → TESTED
-                product.promote(); // TESTED → APPROVED
+                service.submitForTesting();
+                service.approve();
                 break;
             case "IN_PRODUCTION":
-                product.promote(); // IN_DEVELOPMENT → TESTED
-                product.promote(); // TESTED → APPROVED
-                product.promote(); // APPROVED → IN_PRODUCTION
+                service.submitForTesting();
+                service.approve();
+                service.launch();
                 break;
             default:
                 throw new IllegalArgumentException("Unknown product status: " + targetStatus);
@@ -110,25 +99,33 @@ public class CucumberStepDefinitions {
 
     @When("the bio-engineer submits the recipe for testing")
     public void theBioEngineerSubmitsTheRecipeForTesting() {
-        lastRecipeResult = service.promoteRecipe(recipe);
+        lastResult = service.submitForTesting();
     }
 
     @When("the bio-engineer approves the recipe")
     public void theBioEngineerApprovesTheRecipe() {
-        lastRecipeResult = service.promoteRecipe(recipe);
+        try {
+            service.approve();
+            lastResult = "Recipe is APPROVED";
+        } catch (IllegalStateException e) {
+            lastResult = e.getMessage();
+        }
     }
 
     @When("the bio-engineer rejects the recipe")
     public void theBioEngineerRejectsTheRecipe() {
-        lastRecipeResult = service.rejectRecipe(recipe);
+        try {
+            service.reject();
+            lastResult = "Recipe is REJECTED";
+        } catch (IllegalStateException e) {
+            lastResult = e.getMessage();
+        }
     }
 
     @When("the bio-engineer tries to add an ingredient")
     public void theBioEngineerTriesToAddAnIngredient() {
-        RawMaterial sugar = new RawMaterial("RM-002", "Sugar", false, 0.50, UnitType.GRAM);
-        Ingredient sugarIngredient = new Ingredient(50, UnitType.GRAM, 2, sugar);
         try {
-            service.addIngredientToRecipe(recipe, sugarIngredient);
+            service.addToIngredient();
             thrownException = null;
         } catch (IllegalStateException e) {
             thrownException = e;
@@ -138,7 +135,7 @@ public class CucumberStepDefinitions {
     @When("the bio-engineer creates a product with ID {string} and name {string}")
     public void theBioEngineerCreatesAProduct(String productID, String productName) {
         try {
-            product = service.createProductFromRecipe(recipe, productID, productName);
+            service.addProduct(productID, productName);
             thrownException = null;
         } catch (IllegalStateException e) {
             thrownException = e;
@@ -149,49 +146,64 @@ public class CucumberStepDefinitions {
 
     @When("the bio-engineer submits the product for testing")
     public void theBioEngineerSubmitsTheProductForTesting() {
-        lastProductResult = service.promoteProduct(product);
+        lastResult = service.submitForTesting();
     }
 
     @When("the bio-engineer approves the product")
     public void theBioEngineerApprovesTheProduct() {
-        lastProductResult = service.promoteProduct(product);
+        try {
+            service.approve();
+            lastResult = "Product is APPROVED";
+        } catch (IllegalStateException e) {
+            lastResult = e.getMessage();
+        }
     }
 
     @When("the bio-engineer rejects the product")
     public void theBioEngineerRejectsTheProduct() {
-        lastProductResult = service.rejectProduct(product);
+        try {
+            service.reject();
+            lastResult = "Product is REJECTED";
+        } catch (IllegalStateException e) {
+            lastResult = e.getMessage();
+        }
     }
 
     @When("the bio-engineer launches the product into production")
     public void theBioEngineerLaunchesTheProductIntoProduction() {
-        lastProductResult = service.promoteProduct(product);
+        try {
+            service.launch();
+            lastResult = "Product is now IN_PRODUCTION";
+        } catch (IllegalStateException e) {
+            lastResult = e.getMessage();
+        }
     }
 
     @When("the bio-engineer attempts to launch the product again")
     public void theBioEngineerAttemptsToLaunchTheProductAgain() {
-        lastProductResult = service.promoteProduct(product);
+        lastResult = service.getProductByID("PROD-001").promote();
     }
 
     // ── THEN: recipe assertions ───────────────────────────────────────────────
 
     @Then("the recipe status should change to {string}")
     public void theRecipeStatusShouldChangeTo(String expectedStatus) {
-        assertEquals(RecipeStatus.valueOf(expectedStatus), recipe.getStatus());
+        assertEquals(RecipeStatus.valueOf(expectedStatus), service.getRecipeByID(1).getStatus());
     }
 
     @Then("the recipe status should remain {string}")
     public void theRecipeStatusShouldRemain(String expectedStatus) {
-        assertEquals(RecipeStatus.valueOf(expectedStatus), recipe.getStatus());
+        assertEquals(RecipeStatus.valueOf(expectedStatus), service.getRecipeByID(1).getStatus());
     }
 
     @Then("the recipe promotion should fail with message {string}")
     public void theRecipePromotionShouldFailWithMessage(String expectedMessage) {
-        assertEquals(expectedMessage, lastRecipeResult);
+        assertEquals(expectedMessage, lastResult);
     }
 
     @Then("the recipe rejection should fail with message {string}")
     public void theRecipeRejectionShouldFailWithMessage(String expectedMessage) {
-        assertEquals(expectedMessage, lastRecipeResult);
+        assertEquals(expectedMessage, lastResult);
     }
 
     @Then("the system should refuse the update with a {string} error")
@@ -210,34 +222,37 @@ public class CucumberStepDefinitions {
 
     @Then("the product status should change to {string}")
     public void theProductStatusShouldChangeTo(String expectedStatus) {
-        assertEquals(ProductStatus.valueOf(expectedStatus), product.getStatus());
+        assertEquals(ProductStatus.valueOf(expectedStatus),
+                service.getProductByID("PROD-001").getStatus());
     }
 
     @Then("the product status should remain {string}")
     public void theProductStatusShouldRemain(String expectedStatus) {
-        assertEquals(ProductStatus.valueOf(expectedStatus), product.getStatus());
+        assertEquals(ProductStatus.valueOf(expectedStatus),
+                service.getProductByID("PROD-001").getStatus());
     }
 
     @Then("the product rejection should fail with message {string}")
     public void theProductRejectionShouldFailWithMessage(String expectedMessage) {
-        assertEquals(expectedMessage, lastProductResult);
+        assertEquals(expectedMessage, lastResult);
     }
 
     @Then("the system should indicate that this is the final state")
     public void theSystemShouldIndicateFinalState() {
-        assertEquals("Product is already IN_PRODUCTION and cannot be promoted further",
-                lastProductResult);
+        assertEquals("Product is already IN_PRODUCTION and cannot be promoted further", lastResult);
     }
 
     @Then("a product with status {string} should be returned")
     public void aProductWithStatusShouldBeReturned(String expectedStatus) {
+        Product product = service.getProductByID("PROD-001");
         assertNotNull(product, "Expected a product to be created");
         assertEquals(ProductStatus.valueOf(expectedStatus), product.getStatus());
     }
 
     @Then("the product should be linked to the recipe")
     public void theProductShouldBeLinkedToTheRecipe() {
+        Product product = service.getProductByID("PROD-001");
         assertNotNull(product.getBaseRecipe(), "Product should have a linked recipe");
-        assertEquals(recipe.getRecipeID(), product.getBaseRecipe().getRecipeID());
+        assertEquals(1, product.getBaseRecipe().getRecipeID());
     }
 }
