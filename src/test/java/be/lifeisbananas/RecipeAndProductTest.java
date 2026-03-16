@@ -34,7 +34,7 @@ class RecipeAndProductTest {
         assertEquals(RecipeStatus.APPROVED, recipe.getStatus());
 
         // Create product and promote it all the way through
-        Product product = recipe.createProduct("PROD-001", "Banana Crunch Snack");
+        Product product = recipe.createProduct(1, "Banana Crunch Snack");
         assertEquals(ProductStatus.IN_DEVELOPMENT, product.getStatus());
 
         assertEquals("Product is now TESTED", product.promote());
@@ -66,7 +66,7 @@ class RecipeAndProductTest {
         // Recipe is still DRAFT
 
         assertThrows(IllegalStateException.class, () -> {
-            recipe.createProduct("PROD-001", "Banana Crunch Snack");
+            recipe.createProduct(1, "Banana Crunch Snack");
         });
     }
 
@@ -76,7 +76,7 @@ class RecipeAndProductTest {
         recipe.promote(); // DRAFT → TESTING
 
         assertThrows(IllegalStateException.class, () -> {
-            recipe.createProduct("PROD-001", "Banana Crunch Snack");
+            recipe.createProduct(1, "Banana Crunch Snack");
         });
     }
 
@@ -88,7 +88,7 @@ class RecipeAndProductTest {
         recipe.promote();
         recipe.promote();
 
-        Product product = recipe.createProduct("PROD-001", "Banana Crunch Snack");
+        Product product = recipe.createProduct(1, "Banana Crunch Snack");
         product.promote(); // IN_DEVELOPMENT → TESTED
         product.promote(); // TESTED → APPROVED
         product.promote(); // APPROVED → IN_PRODUCTION

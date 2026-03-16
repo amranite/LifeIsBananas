@@ -51,6 +51,9 @@ public class Recipe {
                 return "Recipe is APPROVED";
             case APPROVED:
                 return "Recipe is already APPROVED and cannot be promoted further";
+            case REJECTED:
+                status = RecipeStatus.TESTING;
+                return "Recipe resubmitted for TESTING";
             default:
                 return "Unknown status";
         }
@@ -62,7 +65,7 @@ public class Recipe {
      * @param productName the name for the new product
      * @return the newly created Product
      */
-    public Product createProduct(String productID, String productName) {
+    public Product createProduct(int productID, String productName) {
         if (status != RecipeStatus.APPROVED) {
             throw new IllegalStateException("Can only create a product from an APPROVED recipe");
         }
