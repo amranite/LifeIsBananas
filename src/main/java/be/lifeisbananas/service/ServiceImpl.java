@@ -45,14 +45,12 @@ public class ServiceImpl {
         throw new IllegalStateException("Nothing to approve in the current state");
     }
 
-    public void reject() {
-        if (currentProduct != null && currentProduct.getStatus() == ProductStatus.TESTED) {
-            currentProduct.reject();
-            return;
+    public String reject() {
+        if (currentProduct != null) {
+            return currentProduct.reject();
         }
-        if (currentRecipe != null && currentRecipe.getStatus() == RecipeStatus.TESTING) {
-            currentRecipe.reject();
-            return;
+        if (currentRecipe != null) {
+            return currentRecipe.reject();
         }
         throw new IllegalStateException("Nothing to reject in the current state");
     }
@@ -62,7 +60,7 @@ public class ServiceImpl {
             throw new IllegalStateException("No active recipe");
         }
         if (currentRecipe.getStatus() != RecipeStatus.DRAFT) {
-            throw new IllegalStateException("Can only add ingredients to a DRAFT recipe");
+            throw new IllegalStateException("locked");
         }
         currentRecipe.addIngredient(ingredient);
     }
@@ -91,6 +89,10 @@ public class ServiceImpl {
             return currentProduct;
         }
         return null;
+    }
+
+    public Product getCurrentProduct() {
+        return currentProduct;
     }
 
     public void launch() {

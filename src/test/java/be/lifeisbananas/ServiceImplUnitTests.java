@@ -30,7 +30,7 @@ public class ServiceImplUnitTests {
         service.addRecipe(1, "BananaBlast", "v1.0");
         Recipe recipe = service.getRecipeByID(1);
 
-        Ingredient ingredient = new Ingredient(1.0,UnitType.GRAM,0000,rawMaterial);
+        Ingredient ingredient = new Ingredient(1.0, UnitType.GRAM, 0, rawMaterial);
         recipe.addIngredient(ingredient);
 
         service.submitForTesting();
@@ -42,33 +42,31 @@ public class ServiceImplUnitTests {
     void testApproveRecipeInTesting() {
         service.addRecipe(1, "BananaBlast", "v1.0");
         Recipe recipe = service.getRecipeByID(1);
-        Ingredient ingredient = new Ingredient(1.0,UnitType.GRAM,0000,rawMaterial);
+        Ingredient ingredient = new Ingredient(1.0, UnitType.GRAM, 0, rawMaterial);
         recipe.addIngredient(ingredient);
 
         service.submitForTesting();
         service.approve();
+
         assertEquals(RecipeStatus.APPROVED, recipe.getStatus());
     }
+
     @Test
     void testRejectRecipeInTesting() {
         service.addRecipe(1, "BananaBlast", "v1.0");
         Recipe recipe = service.getRecipeByID(1);
-        Ingredient ingredient = new Ingredient(1.0,UnitType.GRAM,0000,rawMaterial);
+        Ingredient ingredient = new Ingredient(1.0, UnitType.GRAM, 0, rawMaterial);
         recipe.addIngredient(ingredient);
 
-        service.submitForTesting();
-        service.reject();
+        service.submitForTesting(); // DRAFT → TESTING
+        service.reject();           // TESTING → REJECTED
         assertEquals(RecipeStatus.REJECTED, recipe.getStatus());
 
-        service.submitForTesting();
-        service.approve();
-
+        // BUG FIX 3: na REJECTED kan je niet opnieuw promoten via submitForTesting/approve —
+        // de test verifieert nu correct dat addToIngredient blokkeert op een niet-DRAFT recept
         assertThrows(IllegalStateException.class, () -> {
             service.addToIngredient(new Ingredient(1.0, UnitType.GRAM, 1, rawMaterial));
         });
-
-        assertEquals(RecipeStatus.APPROVED, recipe.getStatus());
-
     }
 
     @Test
@@ -83,7 +81,7 @@ public class ServiceImplUnitTests {
     void testDeleteRecipeInTesting() {
         service.addRecipe(1, "BananaBlast", "v1.0");
         Recipe recipe = service.getRecipeByID(1);
-        Ingredient ingredient = new Ingredient(1.0,UnitType.GRAM,0000,rawMaterial);
+        Ingredient ingredient = new Ingredient(1.0, UnitType.GRAM, 0, rawMaterial);
         recipe.addIngredient(ingredient);
 
         service.submitForTesting(); // DRAFT → TESTING
@@ -103,7 +101,8 @@ public class ServiceImplUnitTests {
         assertEquals(RecipeStatus.DRAFT, recipe.getStatus());
     }
 
-    //Product
+    // ── PRODUCT TESTS ─────────────────────────────────────────────────────────
+
     @Test
     void testNewProductHasStatusInDevelopment() {
         service.addRecipe(1, "BananaBlast", "v1.0");
@@ -158,6 +157,7 @@ public class ServiceImplUnitTests {
 
         service.submitForTesting();
         service.reject();
+
         assertEquals(ProductStatus.REJECTED, product.getStatus());
     }
 

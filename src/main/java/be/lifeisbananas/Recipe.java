@@ -27,15 +27,21 @@ public class Recipe {
     }
 
     /**
-     * Add an ingredient to this recipe
+     * Add an ingredient to this recipe.
+     * Throws IllegalStateException if the recipe is APPROVED (locked).
+     *
      * @param ingredient the ingredient to add
      */
     public void addIngredient(Ingredient ingredient) {
+        if (status == RecipeStatus.APPROVED) {
+            throw new IllegalStateException("locked");
+        }
         ingredients.add(ingredient);
     }
 
     /**
-     * Promote recipe to next status
+     * Promote recipe to the next status.
+     *
      * @return message describing the result of the promotion attempt
      */
     public String promote() {
@@ -52,16 +58,37 @@ public class Recipe {
             case APPROVED:
                 return "Recipe is already APPROVED and cannot be promoted further";
             case REJECTED:
-                status = RecipeStatus.TESTING;
-                return "Recipe resubmitted for TESTING";
+                return "Cannot promote: recipe is REJECTED";
             default:
                 return "Unknown status";
         }
     }
 
     /**
-     * Create a product based on this recipe (only allowed when APPROVED)
-     * @param productID the ID for the new product
+     * Reject this recipe (only allowed from TESTING).
+     *
+     * @return message describing the result of the rejection attempt
+     */
+    public String reject() {
+        switch (status) {
+            case TESTING:
+                status = RecipeStatus.REJECTED;
+                return "Recipe is REJECTED";
+            case DRAFT:
+                return "Cannot reject: recipe is still in DRAFT";
+            case APPROVED:
+                return "Cannot reject: recipe is already APPROVED";
+            case REJECTED:
+                return "Cannot reject: recipe is already REJECTED";
+            default:
+                return "Unknown status";
+        }
+    }
+
+    /**
+     * Create a product based on this recipe (only allowed when APPROVED).
+     *
+     * @param productID   the ID for the new product
      * @param productName the name for the new product
      * @return the newly created Product
      */
@@ -72,16 +99,9 @@ public class Recipe {
         return new Product(productID, productName, this);
     }
 
-    public void reject() {
-        if (status != RecipeStatus.TESTING) {
-            throw new IllegalStateException("Can only reject a recipe that is in TESTING");
-        }
-        status = RecipeStatus.REJECTED;
-    }
-
     // getters
-    public RecipeStatus getStatus() { return status; }
-    public Integer getRecipeID() { return recipeID; }
-    public String getName() { return name; }
+    public RecipeStatus getStatus()        { return status; }
+    public Integer getRecipeID()           { return recipeID; }
+    public String getName()                { return name; }
     public List<Ingredient> getIngredients() { return ingredients; }
 }
