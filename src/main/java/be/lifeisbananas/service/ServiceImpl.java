@@ -11,6 +11,7 @@ public class ServiceImpl {
     private Product currentProduct;
     private List<Ingredient> ingredients = new ArrayList<>();
     private List<RawMaterial> rawMaterials = new ArrayList<>();
+    private RecipeStatus status;
 
     public void addRecipe(int recipeID, String name, String version) {
         this.currentRecipe = new Recipe(recipeID, name, version);
@@ -57,7 +58,7 @@ public class ServiceImpl {
         throw new IllegalStateException("Nothing to reject in the current state");
     }
 
-    public void addToIngredient(Ingredient ingredient) {
+    public void addIngredient(Ingredient ingredient) {
         if (currentRecipe == null) {
             throw new IllegalStateException("No active recipe");
         }
@@ -102,4 +103,21 @@ public class ServiceImpl {
         }
         currentProduct.promote();
     }
-}
+    // Toegevoegd voor sequence test
+
+    public List<Ingredient> getIngredients() {
+        if (currentRecipe == null) return new ArrayList<>();
+        return currentRecipe.getIngredients();
+    }
+
+    public RecipeStatus getStatus() {
+        if (currentRecipe == null) return null;
+        return currentRecipe.getStatus();
+    }
+
+    public String promote() {
+        if (currentRecipe == null) throw new IllegalStateException("No active recipe");
+        return currentRecipe.promote();
+    }
+};
+

@@ -64,7 +64,7 @@ public class ServiceImplUnitTests {
         service.approve();
 
         assertThrows(IllegalStateException.class, () -> {
-            service.addToIngredient(new Ingredient(1.0, UnitType.GRAM, 1, rawMaterial));
+            service.addIngredient(new Ingredient(1.0, UnitType.GRAM, 1, rawMaterial));
         });
 
         assertEquals(RecipeStatus.APPROVED, recipe.getStatus());

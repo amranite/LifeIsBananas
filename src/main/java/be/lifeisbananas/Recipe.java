@@ -31,7 +31,7 @@ public class Recipe {
      * @param ingredient the ingredient to add
      */
     public void addIngredient(Ingredient ingredient) {
-        //ingredients.add(ingredient);
+        ingredients.add(ingredient);
     }
 
     /**
