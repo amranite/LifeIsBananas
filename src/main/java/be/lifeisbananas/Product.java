@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class Product {
 
     // properties
-    private String productID;
+    private int productID;
     private String name;
     private String description;
     private String batchNumber;
@@ -13,7 +13,7 @@ public class Product {
     private ProductStatus status;
     private Recipe baseRecipe;
 
-    public Product(String productID, String name, Recipe recipe) {
+    public Product(int productID, String name, Recipe recipe) {
         this.productID = productID;
         this.name = name;
         this.baseRecipe = recipe;
@@ -69,7 +69,7 @@ public class Product {
     }
 
     public ProductStatus getStatus() { return status; }
-    public String getProductID() { return productID; }
+    public int getProductID() { return productID; }
     public String getName() { return name; }
     public Recipe getBaseRecipe() { return baseRecipe; }
 }
