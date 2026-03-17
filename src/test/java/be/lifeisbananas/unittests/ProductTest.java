@@ -27,13 +27,13 @@ class ProductTest {
 
         // This should fail because the recipe is still a DRAFT
         assertThrows(IllegalStateException.class, () -> {
-            draftRecipe.createProduct("P-001", "Experimental Product");
+            draftRecipe.createProduct(101, "Experimental Product");
         });
     }
 
     @Test
     void testSuccessfulProductCreation() {
-        Product product = approvedRecipe.createProduct("P-101", "Premium Banana Chips");
+        Product product = approvedRecipe.createProduct(101, "Premium Banana Chips");
 
         assertNotNull(product);
         assertEquals("Premium Banana Chips", product.getName());
@@ -42,7 +42,7 @@ class ProductTest {
 
     @Test
     void testProductPromotionLifecycle() {
-        Product product = approvedRecipe.createProduct("P-101", "Premium Banana Chips");
+        Product product = approvedRecipe.createProduct(101, "Premium Banana Chips");
 
         // IN_DEVELOPMENT -> TESTED
         String msg1 = product.promote();
@@ -57,10 +57,12 @@ class ProductTest {
 
     @Test
     void testRejectProductOnlyWorksWhenTested() {
-        Product product = approvedRecipe.createProduct("P-101", "Premium Banana Chips");
+        Product product = approvedRecipe.createProduct(101, "Premium Banana Chips");
 
-        // Trying to reject while still IN_DEVELOPMENT should fail
-        assertThrows(IllegalStateException.class, () -> product.reject());
+        // Trying to reject while IN_DEVELOPMENT should return a failure message, not throw
+        String result = product.reject();
+        assertEquals("Cannot reject: product is still IN_DEVELOPMENT", result);
+        assertEquals(ProductStatus.IN_DEVELOPMENT, product.getStatus()); // status unchanged
 
         product.promote(); // Move to TESTED
         product.reject();  // Now rejection should work

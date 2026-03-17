@@ -72,7 +72,7 @@ public class CucumberStepDefinitions {
         service.getRecipeByID(99).addIngredient(bananaIngredient);
         service.submitForTesting();
         service.approve();
-        service.addProduct("PROD-001", "Test Product");
+        service.addProduct(101, "Test Product");
 
         switch (targetStatus) {
             case "IN_DEVELOPMENT":
@@ -120,15 +120,15 @@ public class CucumberStepDefinitions {
     @When("the bio-engineer tries to add an ingredient")
     public void theBioEngineerTriesToAddAnIngredient() {
         try {
-            service.addToIngredient();
+            service.addToIngredient(bananaIngredient); // was: service.addToIngredient()
             thrownException = null;
         } catch (IllegalStateException e) {
             thrownException = e;
         }
     }
 
-    @When("the bio-engineer creates a product with ID {string} and name {string}")
-    public void theBioEngineerCreatesAProduct(String productID, String productName) {
+    @When("the bio-engineer creates a product with ID {int} and name {string}")
+    public void theBioEngineerCreatesAProduct(int productID, String productName) {
         try {
             service.addProduct(productID, productName);
             thrownException = null;

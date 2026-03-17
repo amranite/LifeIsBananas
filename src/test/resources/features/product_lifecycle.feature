@@ -30,7 +30,7 @@ Feature: Product Lifecycle Management
     And the recipe has at least one ingredient
     When the bio-engineer submits the recipe for testing
     And the bio-engineer approves the recipe
-    And the bio-engineer creates a product with ID "PROD-100" and name "Full Flow Product"
+    And the bio-engineer creates a product with ID 100 and name "Full Flow Product"
     And the bio-engineer submits the product for testing
     And the bio-engineer approves the product
     And the bio-engineer launches the product into production

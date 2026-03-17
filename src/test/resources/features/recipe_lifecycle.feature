@@ -23,7 +23,7 @@ Feature: Recipe Lifecycle Management
 
   Scenario: Create a product from an approved recipe
     Given a recipe has status "APPROVED"
-    When the bio-engineer creates a product with ID "PROD-001" and name "Banana Crunch Snack"
+    When the bio-engineer creates a product with ID 1 and name "Banana Crunch Snack"
     Then a product with status "IN_DEVELOPMENT" should be returned
     And the product should be linked to the recipe
 
@@ -64,5 +64,5 @@ Feature: Recipe Lifecycle Management
   Scenario: Cannot create a product from a non-approved recipe
     Given a recipe has status "DRAFT"
     And the recipe has at least one ingredient
-    When the bio-engineer creates a product with ID "PROD-001" and name "Banana Crunch Snack"
+    When the bio-engineer creates a product with ID 1 and name "Banana Crunch Snack"
     Then the system should throw an illegal state exception
