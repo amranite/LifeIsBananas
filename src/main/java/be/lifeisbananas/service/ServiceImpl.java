@@ -1,14 +1,26 @@
 package be.lifeisbananas.service;
+import org.springframework.stereotype.Service;
+
 
 import be.lifeisbananas.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Service
 public class ServiceImpl {
 
-    private Recipe currentRecipe;
+
+
+    private final IPromote promoteService;
+
     private Product currentProduct;
+
+    // Constructor Injection (beste manier)
+    public ServiceImpl(IPromote promoteService) {
+        this.promoteService = promoteService;
+    }
+
+    private Recipe currentRecipe;
     private List<Ingredient> ingredients = new ArrayList<>();
     private List<RawMaterial> rawMaterials = new ArrayList<>();
 
@@ -25,7 +37,7 @@ public class ServiceImpl {
 
     public String submitForTesting() {
         if (currentProduct != null && currentProduct.getStatus() == ProductStatus.IN_DEVELOPMENT) {
-            return currentProduct.promote();
+            return promoteService.nextStatus(currentProduct);
         }
         if (currentRecipe != null) {
             return currentRecipe.promote();
@@ -35,7 +47,7 @@ public class ServiceImpl {
 
     public void approve() {
         if (currentProduct != null && currentProduct.getStatus() == ProductStatus.TESTED) {
-            currentProduct.promote();
+            promoteService.nextStatus(currentProduct);
             return;
         }
         if (currentRecipe != null && currentRecipe.getStatus() == RecipeStatus.TESTING) {
@@ -47,7 +59,7 @@ public class ServiceImpl {
 
     public String reject() {
         if (currentProduct != null) {
-            return currentProduct.reject();
+            return promoteService.reject(currentProduct);
         }
         if (currentRecipe != null) {
             return currentRecipe.reject();
@@ -102,6 +114,6 @@ public class ServiceImpl {
         if (currentProduct.getStatus() != ProductStatus.APPROVED) {
             throw new IllegalStateException("Product must be APPROVED before launch");
         }
-        currentProduct.promote();
+        promoteService.nextStatus(currentProduct);
     }
 }
