@@ -31,11 +31,6 @@ public class Promote implements IPromote {
         }
     }
 
-    @Autowired
-    public Promote(IPromote promote) {
-        this.promote = promote;
-    }
-
     public String reject (Product product){
         if (product.getStatus() == ProductStatus.TESTED)
         {
