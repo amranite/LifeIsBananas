@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Component
 public class Promote implements IPromote {
 
-    private IPromote promote;
     @Override
     public String nextStatus( Product product) {
         if (product.getStatus() == ProductStatus.IN_DEVELOPMENT)
