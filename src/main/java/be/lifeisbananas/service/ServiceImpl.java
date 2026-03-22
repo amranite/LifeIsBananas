@@ -15,6 +15,11 @@ public class ServiceImpl {
 
     private Product currentProduct;
 
+    // No-arg constructor for tests and non-Spring usage
+    public ServiceImpl() {
+        this.promoteService = new Promote();
+    }
+
     // Constructor Injection (beste manier)
     public ServiceImpl(IPromote promoteService) {
         this.promoteService = promoteService;
@@ -59,7 +64,7 @@ public class ServiceImpl {
 
     public String reject() {
         if (currentProduct != null) {
-            return promoteService.reject(currentProduct);
+            return currentProduct.reject();
         }
         if (currentRecipe != null) {
             return currentRecipe.reject();

@@ -10,9 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * Covers:
  *   Main scenario  – create product from APPROVED recipe, promote to TESTED, promote to APPROVED
- *   Extension 2a   – cannot create product from a non-APPROVED recipe
- *   Extension 3a   – cannot reject product while still IN_DEVELOPMENT (instead of promoting at step 3)
- *   Extension 5a   – reject product after TESTED (instead of promoting at step 5)
+ *   Extension 2.1   – cannot create product from a non-APPROVED recipe
+ *   Extension 3.1   – cannot reject product while still IN_DEVELOPMENT (instead of promoting at step 3)
+ *   Extension 5.1   – reject product after TESTED (instead of promoting at step 5)
  */
 class ProductLifecycleUseCaseTest {
 
@@ -30,7 +30,7 @@ class ProductLifecycleUseCaseTest {
         approvedRecipe.promote(); // TESTING -> APPROVED
     }
 
-    // ── Extension 2a ──────────────────────────────────────────────────────────
+    // ── Extension 2.1 ──────────────────────────────────────────────────────────
     @Test
     void testCannotCreateProductFromNonApprovedRecipe() {
         // A DRAFT recipe cannot produce a product (step 2 blocked)
@@ -64,7 +64,7 @@ class ProductLifecycleUseCaseTest {
         assertEquals("Product is APPROVED", msg2);
     }
 
-    // ── Extension 3a ──────────────────────────────────────────────────────────
+    // ── Extension 3.1 ──────────────────────────────────────────────────────────
     @Test
     void testCannotRejectProductWhileInDevelopment() {
         // Instead of promoting at step 3, Bio-Engineer tries to reject — must be blocked
@@ -77,7 +77,7 @@ class ProductLifecycleUseCaseTest {
                 "Status must remain IN_DEVELOPMENT after failed rejection attempt");
     }
 
-    // ── Extension 5a ──────────────────────────────────────────────────────────
+    // ── Extension 5.1 ──────────────────────────────────────────────────────────
     @Test
     void testRejectProductAfterTesting() {
         // Steps 1-4 (happy path up to TESTED), then instead of promoting at step 5: reject
