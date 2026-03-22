@@ -16,6 +16,20 @@
 
     <dependencies>
 
+        <!-- Spring Context voor Dependency Injection -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>6.1.6</version>
+        </dependency>
+
+        <!-- CGLIB -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
         <!-- JUnit Platform Suite (voor RunCucumberTest) -->
         <dependency>
             <groupId>org.junit.platform</groupId>
