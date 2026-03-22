@@ -29,45 +29,16 @@ public class Product {
      * Promote product to next status
      * @return message describing the result of the promotion attempt
      */
-    public String promote() {
-        switch (status) {
-            case IN_DEVELOPMENT:
-                status = ProductStatus.TESTED;
-                return "Product is now TESTED";
-            case TESTED:
-                status = ProductStatus.APPROVED;
-                return "Product is APPROVED";
-            case APPROVED:
-                status = ProductStatus.IN_PRODUCTION;
-                return "Product is now IN_PRODUCTION";
-            case IN_PRODUCTION:
-                return "Product is already IN_PRODUCTION and cannot be promoted further";
-            default:
-                return "Cannot promote product from " + status;
-        }
-    }
+
 
     /**
      * Reject this product (only allowed from TESTED).
      *
      * @return message describing the result of the rejection attempt
      */
-    public String reject() {
-        if (status == ProductStatus.TESTED) {
-            status = ProductStatus.REJECTED;
-            return "Product rejected";
-        }
-        if (status == ProductStatus.IN_DEVELOPMENT) {
-            return "Cannot reject: product is still IN_DEVELOPMENT";
-        }
-        if (status == ProductStatus.IN_PRODUCTION) {
-            return "Cannot reject: product is already IN_PRODUCTION";
-        }
-        return "Cannot reject: product is " + status;
-    }
 
 
-    public be.lifeisbananas.ProductStatus getStatus() { return status; }
+    public ProductStatus getStatus() { return status; }
     public int getProductID() { return productID; }
     public String getName() { return name; }
     public Recipe getBaseRecipe() { return baseRecipe; }
