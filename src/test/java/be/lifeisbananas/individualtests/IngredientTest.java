@@ -1,4 +1,4 @@
-package be.lifeisbananas.unittests;
+package be.lifeisbananas.individualtests;
 
 import be.lifeisbananas.*;
 import org.junit.jupiter.api.BeforeEach;
