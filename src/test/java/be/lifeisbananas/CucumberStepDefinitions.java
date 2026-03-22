@@ -1,7 +1,5 @@
 package be.lifeisbananas;
 
-import be.lifeisbananas.service.ProductServiceImpl;
-import be.lifeisbananas.service.RecipeServiceImpl;
 import be.lifeisbananas.service.ServiceImpl;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
@@ -23,9 +21,7 @@ public class CucumberStepDefinitions {
 
     @Before
     public void setUp() {
-        RecipeServiceImpl recipeService = new RecipeServiceImpl();
-        ProductServiceImpl productService = new ProductServiceImpl(recipeService);
-        service = new ServiceImpl(recipeService, productService);
+        service = new ServiceImpl();
         bananaIngredient = new Ingredient(200, UnitType.GRAM, 1, BANANA);
         lastResult = null;
         thrownException = null;
