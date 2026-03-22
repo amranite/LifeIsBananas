@@ -4,10 +4,13 @@ import be.lifeisbananas.Product;
 import be.lifeisbananas.ProductStatus;
 import org.springframework.stereotype.Service;
 import java.util.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
-@Service
+@Component
 public class Promote implements IPromote {
+
+    private IPromote promote;
     @Override
     public String nextStatus( Product product) {
         if (product.getStatus() == ProductStatus.IN_DEVELOPMENT)
@@ -26,6 +29,11 @@ public class Promote implements IPromote {
             else {
             return "unknown status";
         }
+    }
+
+    @Autowired
+    public Promote(IPromote promote) {
+        this.promote = promote;
     }
 
     public String reject (Product product){
