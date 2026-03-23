@@ -1,4 +1,5 @@
 package be.lifeisbananas.service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -16,11 +17,9 @@ public class ServiceImpl {
     private Product currentProduct;
 
     // No-arg constructor for tests and non-Spring usage
-    public ServiceImpl() {
-        this.promoteService = new Promote();
-    }
 
     // Constructor Injection (beste manier)
+    @Autowired
     public ServiceImpl(IPromote promoteService) {
         this.promoteService = promoteService;
     }
