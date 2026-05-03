@@ -1,6 +1,6 @@
 package org.example;
 
-import be.lifeisbananas.PersistenceConfig;
+import be.lifeisbananas.persistence.PersistenceConfig;
 import be.lifeisbananas.Recipe;
 import be.lifeisbananas.dao.RecipeDao;
 import be.lifeisbananas.service.RecipeService;

@@ -36,7 +36,6 @@ public class RecipeHibernateDao implements RecipeDao {
     }
 
     public Recipe getRecipeById(int id) {
-        // HQL (Hibernate Query Language): Let op, we gebruiken de Java-variabele 'recipeID', geen SQL-kolommen!
         return currentSession()
                 .createQuery("from Recipe where recipeID = :id", Recipe.class)
                 .setParameter("id", id)

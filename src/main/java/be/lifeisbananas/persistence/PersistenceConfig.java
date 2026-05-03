@@ -1,4 +1,4 @@
-package be.lifeisbananas;
+package be.lifeisbananas.persistence;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.*;
@@ -33,7 +33,7 @@ public class PersistenceConfig {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sf = new LocalSessionFactoryBean();
         sf.setDataSource(datasource());
-        sf.setPackagesToScan("be.lifeisbananas"); // Waar staan je @Entity klassen?
+        sf.setPackagesToScan("be.lifeisbananas");
 
         Properties hibernateProperties = new Properties();
         hibernateProperties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");

@@ -12,11 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service("recipeService") // Vertelt Spring: "Dit is de slimme manager"
+@Service("recipeService")
 @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
 public class RecipeServiceImpl implements RecipeService {
-
-    // De manager heeft zijn DAO-mannetjes nodig
+    
     private RecipeDao recipeDao;
     private ProductDao productDao;
 
@@ -48,7 +47,7 @@ public class RecipeServiceImpl implements RecipeService {
         // =====================================================================
         // DE "DEMO-KNOP" (Haal de // weg om een crash te simuleren)
         // =====================================================================
-        // if (true) { throw new RuntimeException("BOEM! Systeemcrash tijdens verwijderen."); }
+        if (true) { throw new RuntimeException("BOEM! Systeemcrash tijdens verwijderen."); }
 
         recipeDao.deleteRecipe(recipe);
         System.out.println("LOG: Recept " + recipeId + " is volledig verwijderd.");
