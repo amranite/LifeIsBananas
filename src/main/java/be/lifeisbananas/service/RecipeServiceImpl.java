@@ -1,75 +1,56 @@
 package be.lifeisbananas.service;
 
-import be.lifeisbananas.Ingredient;
+import be.lifeisbananas.Product;
 import be.lifeisbananas.Recipe;
-import be.lifeisbananas.RecipeStatus;
+import be.lifeisbananas.dao.ProductDao;
+import be.lifeisbananas.dao.RecipeDao;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
-public class RecipeServiceImpl implements IRecipeService {
+import java.util.List;
 
-    private Recipe currentRecipe;
+@Service("recipeService") // Vertelt Spring: "Dit is de slimme manager"
+@Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+public class RecipeServiceImpl implements RecipeService {
 
-    @Override
-    public void addRecipe(int recipeID, String name, String version) {
-        this.currentRecipe = new Recipe(recipeID, name, version);
+    // De manager heeft zijn DAO-mannetjes nodig
+    private RecipeDao recipeDao;
+    private ProductDao productDao;
+
+    @Autowired
+    public void setRecipeDao(RecipeDao recipeDao) {
+        this.recipeDao = recipeDao;
     }
 
-    @Override
-    public Recipe getRecipeByID(int id) {
-        if (currentRecipe != null && currentRecipe.getRecipeID() == id) {
-            return currentRecipe;
-        }
-        return null;
+    @Autowired
+    public void setProductDao(ProductDao productDao) {
+        this.productDao = productDao;
     }
 
-    @Override
-    public Recipe getCurrentRecipe() {
-        return currentRecipe;
-    }
+    @Transactional(propagation= Propagation.REQUIRED, readOnly=false)
+    public void verwijderRecept(int recipeId) {
 
-    @Override
-    public String submitForTesting() {
-        if (currentRecipe != null) {
-            return currentRecipe.promote();
+        Recipe recipe = recipeDao.getRecipeById(recipeId);
+        if (recipe == null) {
+            throw new IllegalArgumentException("Recept met ID " + recipeId + " bestaat niet!");
         }
-        throw new IllegalStateException("No active recipe to submit for testing");
-    }
 
-    @Override
-    public void approve() {
-        if (currentRecipe != null && currentRecipe.getStatus() == RecipeStatus.TESTING) {
-            currentRecipe.promote();
-            return;
+        List<Product> producten = productDao.getProductsByRecipeId(recipeId);
+        for (Product p : producten) {
+            productDao.deleteProduct(p);
         }
-        throw new IllegalStateException("Nothing to approve in the current state");
-    }
 
-    @Override
-    public String reject() {
-        if (currentRecipe != null) {
-            return currentRecipe.reject();
-        }
-        throw new IllegalStateException("Nothing to reject in the current state");
-    }
+        System.out.println("LOG: Producten zijn verwijderd, we gaan nu het recept zelf doen...");
 
-    @Override
-    public void addIngredient(Ingredient ingredient) {
-        if (currentRecipe == null) {
-            throw new IllegalStateException("No active recipe");
-        }
-        if (currentRecipe.getStatus() != RecipeStatus.DRAFT) {
-            throw new IllegalStateException("locked");
-        }
-        currentRecipe.addIngredient(ingredient);
-    }
+        // =====================================================================
+        // DE "DEMO-KNOP" (Haal de // weg om een crash te simuleren)
+        // =====================================================================
+        // if (true) { throw new RuntimeException("BOEM! Systeemcrash tijdens verwijderen."); }
 
-    @Override
-    public void delete() {
-        if (currentRecipe != null) {
-            currentRecipe = null;
-            return;
-        }
-        throw new IllegalStateException("Nothing to delete");
+        recipeDao.deleteRecipe(recipe);
+        System.out.println("LOG: Recept " + recipeId + " is volledig verwijderd.");
     }
 }

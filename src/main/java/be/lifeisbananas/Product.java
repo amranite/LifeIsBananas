@@ -1,17 +1,31 @@
 package be.lifeisbananas;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "products")
 public class Product {
 
     // properties
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int productID;
+
     private String name;
     private String description;
     private String batchNumber;
     private LocalDate productionDate;
+
+    @Enumerated(EnumType.STRING)
     private ProductStatus status;
+
+    @ManyToOne
+    @JoinColumn(name = "recipe_id")
     private Recipe baseRecipe;
+
+    // LEGE CONSTRUCTOR (Verplicht voor Hibernate)
+    protected Product() {}
 
     public Product(int productID, String name, Recipe recipe) {
         this.productID = productID;
@@ -65,7 +79,6 @@ public class Product {
         }
         return "Cannot reject: product is " + status;
     }
-
 
     public be.lifeisbananas.ProductStatus getStatus() { return status; }
     public int getProductID() { return productID; }

@@ -1,20 +1,35 @@
 package be.lifeisbananas;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "recipes")
 public class Recipe {
 
     // properties
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer recipeID;
+
     private String name;
     private String version;
     private String preparationSteps;
     private String freezeDryingInstructions;
     private LocalDate creationDate;
+
+    @Enumerated(EnumType.STRING)
     private RecipeStatus status;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "recipe_id")
     private List<Ingredient> ingredients;
+
+    // LEGE CONSTRUCTOR (Verplicht voor Hibernate)
+    protected Recipe() {
+    }
 
     // constructor
     public Recipe(Integer recipeID, String name, String version) {

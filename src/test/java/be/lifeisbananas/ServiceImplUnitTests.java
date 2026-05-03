@@ -1,8 +1,6 @@
 package be.lifeisbananas;
 
-import be.lifeisbananas.service.ProductServiceImpl;
 import be.lifeisbananas.service.RecipeServiceImpl;
-import be.lifeisbananas.service.ServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

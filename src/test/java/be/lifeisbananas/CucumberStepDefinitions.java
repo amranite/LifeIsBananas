@@ -1,8 +1,6 @@
 package be.lifeisbananas;
 
-import be.lifeisbananas.service.ProductServiceImpl;
 import be.lifeisbananas.service.RecipeServiceImpl;
-import be.lifeisbananas.service.ServiceImpl;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 
