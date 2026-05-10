@@ -13,12 +13,24 @@ public class Product {
     private ProductStatus status;
     private Recipe baseRecipe;
 
+    // SINGLETON KOPPELING: deze twee waarden komen automatisch uit ProductionSettings
+    // Elk product krijgt zo altijd de correcte fabrieksstandaarden mee,
+    // zonder ze manueel mee te geven aan de constructor.
+    private double freezeDryingTemperature;  // standaard vriesdroogtemperatuur (°C)
+    private int packagingSizeGrams;          // standaard verpakkingsgrootte (gram)
+
     public Product(int productID, String name, Recipe recipe) {
         this.productID = productID;
         this.name = name;
         this.baseRecipe = recipe;
         this.productionDate = LocalDate.now();
         this.status = ProductStatus.IN_DEVELOPMENT;
+
+        // Haal de fabrieksstandaarden op via de Singleton — er wordt nooit een nieuw
+        // object aangemaakt, altijd hetzelfde unieke ProductionSettings-exemplaar.
+        ProductionSettings settings = ProductionSettings.getInstance();
+        this.freezeDryingTemperature = settings.getDefaultFreezeDryingTemperature();
+        this.packagingSizeGrams = settings.getDefaultPackagingSizeGrams();
     }
 
     protected void setStatus (ProductStatus status) {
@@ -73,4 +85,18 @@ public class Product {
     public int getProductID() { return productID; }
     public String getName() { return name; }
     public Recipe getBaseRecipe() { return baseRecipe; }
+    public double getFreezeDryingTemperature() { return freezeDryingTemperature; }
+    public int getPackagingSizeGrams() { return packagingSizeGrams; }
+
+    /**
+     * UITBREIDING: Geeft een overzicht van de productie-instellingen van dit product.
+     * De waarden komen rechtstreeks uit de centrale ProductionSettings (Singleton),
+     * zodat elk product altijd de actuele fabrieksstandaarden weergeeft.
+     */
+    public String getProductionInfo() {
+        return "Product: " + name +
+               " | Vriesdroogtemperatuur: " + freezeDryingTemperature + "°C" +
+               " | Verpakking: " + packagingSizeGrams + "g" +
+               " | Bedrijf: " + ProductionSettings.getInstance().getCompanyName();
+    }
 }
