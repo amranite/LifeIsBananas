@@ -1,37 +1,28 @@
 package be.lifeisbananas;
+import be.lifeisbananas.Ingredient;
+import be.lifeisbananas.RecipeStatus;
 
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Recipe {
+public abstract class Recipe {
 
-    // properties
     private Integer recipeID;
     private String name;
     private String version;
-    private String preparationSteps;
-    private String freezeDryingInstructions;
-    private LocalDate creationDate;
     private RecipeStatus status;
     private List<Ingredient> ingredients;
 
-    // constructor
-    public Recipe(Integer recipeID, String name, String version) {
+    public Recipe(int recipeID, String name, String version) {
+
         this.recipeID = recipeID;
         this.name = name;
         this.version = version;
-        this.creationDate = LocalDate.now();
         this.status = RecipeStatus.DRAFT;
         this.ingredients = new ArrayList<>();
     }
 
-    /**
-     * Add an ingredient to this recipe.
-     * Throws IllegalStateException if the recipe is APPROVED (locked).
-     *
-     * @param ingredient the ingredient to add
-     */
     public void addIngredient(Ingredient ingredient) {
         if (status == RecipeStatus.APPROVED) {
             throw new IllegalStateException("locked");
@@ -99,9 +90,19 @@ public class Recipe {
         return new Product(productID, productName, this);
     }
 
-    // getters
-    public RecipeStatus getStatus()        { return status; }
-    public Integer getRecipeID()           { return recipeID; }
-    public String getName()                { return name; }
-    public List<Ingredient> getIngredients() { return ingredients; }
+    public RecipeStatus getStatus() {
+        return status;
+    }
+
+    public Integer getRecipeID() {
+        return recipeID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
 }

@@ -3,6 +3,7 @@ package be.lifeisbananas;
 import org.junit.platform.suite.api.*;
 
 import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
+import io.cucumber.junit.platform.engine.Cucumber;
 
 /**
  * JUnit 5 runner that discovers and executes all Cucumber feature files.

@@ -1,17 +1,13 @@
 package be.lifeisbananas;
 
 public class RecipeWorkbank {
-    RecipeFactory factory;
+    IRecipeFactory factory;
 
-    public RecipeWorkbank(RecipeFactory Factory) {
+    public RecipeWorkbank(IRecipeFactory Factory) {
         this.factory = Factory;
     }
 
-    public Recipe makeRecipe(Integer recipeID, String name, String version){
-        Recipe recipe;
-
-        return factory.createRecipe(recipeID, name, version);
-
-
+    public Recipe makeRecipe(int recipeID, String name, String version){
+        return factory.CreateRecipe(recipeID, name, version);
     }
 }
