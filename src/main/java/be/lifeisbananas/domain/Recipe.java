@@ -1,20 +1,44 @@
-package be.lifeisbananas;
+package be.lifeisbananas.domain;
 
+import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Recipe {
+
+@Entity
+@Table(name="recipe")
+public class Recipe implements Serializable {
 
     // properties
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY) // HV 201804015 tbv Gebruik AutoIncrement
     private Integer recipeID;
+
+    @Column
     private String name;
+
+    @Column
     private String version;
+
+    @Column
     private String preparationSteps;
+
+    @Column
     private String freezeDryingInstructions;
+
+    @Column
     private LocalDate creationDate;
+
+    @Enumerated(EnumType.STRING)
     private RecipeStatus status;
+
+    @OneToMany(mappedBy = "recipe")
     private List<Ingredient> ingredients;
+
+    public Recipe() {}
 
     // constructor
     public Recipe(Integer recipeID, String name, String version) {
@@ -96,7 +120,7 @@ public class Recipe {
         if (status != RecipeStatus.APPROVED) {
             throw new IllegalStateException("Can only create a product from an APPROVED recipe");
         }
-        return new Product(productID, productName, this);
+        return new Product(productName, this);
     }
 
     // getters

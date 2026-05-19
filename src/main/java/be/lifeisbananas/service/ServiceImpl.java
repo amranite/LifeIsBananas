@@ -1,8 +1,7 @@
 package be.lifeisbananas.service;
+import be.lifeisbananas.domain.*;
 import org.springframework.stereotype.Service;
 
-
-import be.lifeisbananas.*;
 
 import java.util.ArrayList;
 import java.util.List;

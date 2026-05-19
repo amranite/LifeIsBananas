@@ -1,25 +1,48 @@
-package be.lifeisbananas;
+package be.lifeisbananas.domain;
 
+import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.time.LocalDate;
+@Entity
 
-public class Product {
+@Table(name="product")
+public class Product implements Serializable{
+
 
     // properties
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY) // HV 201804015 tbv Gebruik AutoIncrement
     private int productID;
+
+    @Column
     private String name;
+
+    @Column
     private String description;
+
+    @Column
     private String batchNumber;
+
+    @Column
     private LocalDate productionDate;
+
+    @Enumerated(EnumType.STRING)
     private ProductStatus status;
+
+    @ManyToOne
     private Recipe baseRecipe;
 
-    public Product(int productID, String name, Recipe recipe) {
-        this.productID = productID;
+    public Product() {
+    }
+
+    public Product( String name, Recipe recipe) {
         this.name = name;
         this.baseRecipe = recipe;
         this.productionDate = LocalDate.now();
         this.status = ProductStatus.IN_DEVELOPMENT;
     }
+
 
     protected void setStatus (ProductStatus status) {
         this.status = status;

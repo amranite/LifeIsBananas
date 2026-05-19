@@ -1,4 +1,4 @@
-package be.lifeisbananas;
+package be.lifeisbananas.domain;
 
 public interface IPromote {
     public String nextStatus(Product product);

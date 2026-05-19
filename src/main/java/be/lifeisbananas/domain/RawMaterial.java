@@ -1,16 +1,34 @@
-package be.lifeisbananas;
+package be.lifeisbananas.domain;
 
-public class RawMaterial {
+import jakarta.persistence.*;
+
+import java.io.Serializable;
+
+@Entity
+@Table(name="rawmaterial")
+public class RawMaterial implements Serializable {
 
     // properties
-    private String rawMaterialID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int rawMaterialID;
+
+    @Column
     private String name;
+
+    @Column
     private boolean organicCertified;
+
+    @Column
     private double price;
+
+    @Enumerated(EnumType.STRING)
     private UnitType unit;
 
+    public RawMaterial() {}
+
     // constructor
-    public RawMaterial(String rawMaterialID, String name, boolean organicCertified, double price, UnitType unit) {
+    public RawMaterial(int rawMaterialID, String name, boolean organicCertified, double price, UnitType unit) {
         this.rawMaterialID = rawMaterialID;
         this.name = name;
         this.organicCertified = organicCertified;
@@ -19,7 +37,7 @@ public class RawMaterial {
     }
 
     // getters
-    public String getRawMaterialID() { return rawMaterialID; }
+    public int getRawMaterialID() { return rawMaterialID; }
     public String getName() { return name; }
     public boolean isOrganicCertified() { return organicCertified; }
     public double getPrice() { return price; }

@@ -1,10 +1,5 @@
-package be.lifeisbananas;
+package be.lifeisbananas.domain;
 import org.springframework.stereotype.Component;
-import be.lifeisbananas.Product;
-import be.lifeisbananas.ProductStatus;
-import org.springframework.stereotype.Service;
-import java.util.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Component
