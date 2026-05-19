@@ -6,7 +6,7 @@ import java.util.List;
 public interface LifeIsBananasService {
     public List<Product> geefAlleProducten();
 
-    public Product voegproducttoe(String voornaam, String familienaam, String emailadres, String paswoord);
+    public Product voegproducttoe(String naam, Recipe recept);
 
     public Product zoekproductmetid(int id);
 

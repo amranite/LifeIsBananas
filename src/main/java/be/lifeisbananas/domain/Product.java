@@ -13,6 +13,7 @@ public class Product implements Serializable{
     // properties
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY) // HV 201804015 tbv Gebruik AutoIncrement
+    @Column(name = "id")
     private int productID;
 
     @Column
@@ -31,6 +32,7 @@ public class Product implements Serializable{
     private ProductStatus status;
 
     @ManyToOne
+    @JoinColumn(name = "baseRecipe_id")
     private Recipe baseRecipe;
 
     public Product() {
