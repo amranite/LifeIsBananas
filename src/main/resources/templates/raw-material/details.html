@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Raw Material Details</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+<main class="page narrow">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Details</p>
+            <h1 th:text="${rawMaterial.name}">Raw material</h1>
+        </div>
+        <a class="button ghost" th:href="@{/raw-materials}">Back to list</a>
+    </div>
+
+    <section class="card details-grid">
+        <p><strong>Code:</strong> <span id="detail-code" th:text="${rawMaterial.code}"></span></p>
+        <p><strong>Name:</strong> <span id="detail-name" th:text="${rawMaterial.name}"></span></p>
+        <p><strong>Organic certified:</strong> <span id="detail-organic" th:text="${rawMaterial.organicCertified ? 'Yes' : 'No'}"></span></p>
+        <p><strong>Amount:</strong> <span id="detail-amount" th:text="${#numbers.formatDecimal(rawMaterial.amount, 1, 2)}"></span></p>
+        <p><strong>Price:</strong> <span id="detail-price" th:text="${#numbers.formatDecimal(rawMaterial.price, 1, 2)}"></span></p>
+        <p><strong>Unit:</strong> <span id="detail-unit" th:text="${rawMaterial.unit}"></span></p>
+    </section>
+
+    <div class="actions-row" sec:authorize="hasAuthority('BIO_ENGINEER')">
+        <a class="button" th:href="@{/raw-materials/{id}/edit(id=${rawMaterial.id})}">Edit raw material</a>
+        <form th:action="@{/raw-materials/{id}/delete(id=${rawMaterial.id})}" method="post">
+            <button type="submit" class="button danger">Delete raw material</button>
+        </form>
+    </div>
+</main>
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
+</body>
+</html>

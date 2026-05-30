@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+<main class="page narrow">
+    <section class="card auth-card">
+        <p class="eyebrow">Security Prototype</p>
+        <h1>Sign in to Life Is Bananas</h1>
+        <p>Use one of the seeded accounts to access the protected prototype.</p>
+
+        <div th:if="${param.error}" class="error-banner">
+            Unable to login. Check your email and password.
+        </div>
+
+        <form class="form-grid" method="post" th:action="@{/login}">
+            <label for="username">Email</label>
+            <input id="username" name="username" type="text">
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password">
+
+            <button class="button" type="submit">Login</button>
+        </form>
+
+        <div class="seed-box">
+            <p><strong>Bio-engineer:</strong> hannah.peel@lifeisbananas.be / banana123</p>
+            <p><strong>Warehouse manager:</strong> marcus.store@lifeisbananas.be / warehouse123</p>
+            <p><strong>Multi-role:</strong> nina.cross@lifeisbananas.be / multi123</p>
+        </div>
+    </section>
+</main>
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
+</body>
+</html>

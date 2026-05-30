@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Choose Your Role</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+<main class="page narrow">
+    <section class="card details-grid">
+        <p class="eyebrow">Role Selection</p>
+        <h1>Choose your active role</h1>
+        <p>
+            Welcome <span th:text="${person.firstName}">First</span>
+            <span th:text="${person.lastName}">Last</span>.
+        </p>
+        <p>Select one of your available roles to continue.</p>
+
+        <ul class="role-list">
+            <li th:each="role : ${person.roles}">
+                <a class="button" th:href="@{/role.html(id=${role.id})}" th:text="${role.roleName}">Role</a>
+            </li>
+        </ul>
+    </section>
+</main>
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
+</body>
+</html>
