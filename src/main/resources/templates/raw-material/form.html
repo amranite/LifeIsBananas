@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}">Raw Material Form</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="page narrow">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Maintenance</p>
+            <h1 th:text="${pageTitle}"></h1>
+        </div>
+        <a class="button ghost" th:href="@{/raw-materials}">Back to list</a>
+    </div>
+
+    <form class="card form-grid" th:action="@{${formAction}}" th:object="${rawMaterial}" method="post">
+        <label for="code">Code</label>
+        <input id="code" type="text" th:field="*{code}">
+        <p class="field-hint">A unique code is suggested automatically. You can replace it if needed.</p>
+        <p class="error" th:if="${#fields.hasErrors('code')}" th:errors="*{code}"></p>
+
+        <label for="name">Name</label>
+        <input id="name" type="text" th:field="*{name}">
+        <p class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
+        <label for="amount">Amount</label>
+        <input id="amount" type="number" min="0.01" step="0.01" th:field="*{amount}">
+        <p class="error" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></p>
+
+        <label for="price">Price</label>
+        <input id="price" type="number" min="0.01" step="0.01" th:field="*{price}">
+        <p class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+
+        <label for="unit">Unit</label>
+        <select id="unit" th:field="*{unit}">
+            <option value="">Choose a unit</option>
+            <option th:each="unitOption : ${units}" th:value="${unitOption}" th:text="${unitOption}"></option>
+        </select>
+        <p class="error" th:if="${#fields.hasErrors('unit')}" th:errors="*{unit}"></p>
+
+        <div class="checkbox-row">
+            <input id="organicCertified" type="checkbox" th:field="*{organicCertified}">
+            <label for="organicCertified">Organic certified</label>
+        </div>
+
+        <button id="submit" class="button" type="submit">Save raw material</button>
+    </form>
+</main>
+</body>
+</html>
