@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Life Is Bananas (MySQL)" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="be.lifeisbananas.mvc.LifeIsBananasMvcApplication" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=mysql" />
+    <module name="life-is-bananas-mvc" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

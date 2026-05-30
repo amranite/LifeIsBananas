@@ -41,6 +41,23 @@ class RawMaterialControllerIntegrationTest {
     }
 
     @Test
+    void shouldRenderListWithExistingRawMaterials() throws Exception {
+        RawMaterial existing = new RawMaterial();
+        existing.setCode("RM-001");
+        existing.setName("Banana Puree");
+        existing.setAmount(25.00);
+        existing.setPrice(4.25);
+        existing.setUnit(UnitType.KG);
+        existing.setOrganicCertified(true);
+        rawMaterialRepository.save(existing);
+
+        mockMvc.perform(get("/raw-materials"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Banana Puree")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("KG")));
+    }
+
+    @Test
     void shouldCreateUpdateAndDeleteRawMaterial() throws Exception {
         mockMvc.perform(post("/raw-materials")
                         .param("code", "RM-101")

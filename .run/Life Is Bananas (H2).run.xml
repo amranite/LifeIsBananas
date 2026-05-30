@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Life Is Bananas (H2)" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="be.lifeisbananas.mvc.LifeIsBananasMvcApplication" />
+    <module name="life-is-bananas-mvc" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
