@@ -14,7 +14,7 @@ public abstract class Recipe {
     private RecipeStatus status;
     private List<Ingredient> ingredients;
 
-    public Recipe(int recipeID, String name, String version) {
+    public Recipe(Integer recipeID, String name, String version) {
 
         this.recipeID = recipeID;
         this.name = name;
@@ -29,6 +29,8 @@ public abstract class Recipe {
         }
         ingredients.add(ingredient);
     }
+
+
 
     /**
      * Promote recipe to the next status.

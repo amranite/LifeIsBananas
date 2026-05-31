@@ -7,7 +7,13 @@ public class RecipeWorkbank {
         this.factory = Factory;
     }
 
-    public Recipe makeRecipe(int recipeID, String name, String version){
-        return factory.CreateRecipe(recipeID, name, version);
+
+
+
+    public Recipe makeRecipe(){
+        Recipe recept = factory.CreateRecipe(5, "banaansnack", "Finaal" );
+        return recept;
     }
+
+
 }

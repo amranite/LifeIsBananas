@@ -1,7 +1,8 @@
 package be.lifeisbananas;
 
 public class GroentenFactory implements IRecipeFactory{
-    public GroentenRecipe CreateRecipe(int id, String name, String version){
-        return new GroentenRecipe(id, name, version);
+    @Override
+    public GroentenRecipe CreateRecipe(Integer recipeID, String name, String version){
+        return new GroentenRecipe(recipeID, name, version);
     }
 }
