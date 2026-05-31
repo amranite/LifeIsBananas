@@ -10,8 +10,8 @@ public class RecipeWorkbank {
 
 
 
-    public Recipe makeRecipe(){
-        Recipe recept = factory.CreateRecipe(5, "banaansnack", "Finaal" );
+    public Recipe makeRecipe(Integer recipeID, String name, String version){
+        Recipe recept = factory.CreateRecipe(recipeID, name, version );
         return recept;
     }
 
