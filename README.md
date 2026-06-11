@@ -21,7 +21,7 @@ This project demonstrates:
 - Spring Data JPA
 - H2 in-memory database
 - MariaDB/MySQL
-- Selenium + Cucumber acceptance test scaffold
+- Selenium + Serenity Cucumber acceptance tests
 
 ## Prerequisites
 
@@ -162,28 +162,27 @@ mvn spring-boot:run -Dspring-boot.run.profiles=mysql
 Run the verified integration tests:
 
 ```bash
-mvn -Dtest=RawMaterialControllerIntegrationTest test
+mvn test
 ```
 
 Tests still use H2 in-memory configuration from `src/test/resources/application.properties`.
 
 ## Run the Selenium acceptance test
 
-The Selenium test uses SafariDriver on macOS.
+The Selenium acceptance test uses Serenity Cucumber and ChromeDriver.
 
-Before running it, enable:
-
-1. Safari
-2. Settings
-3. Advanced
-4. Show features for web developers
-5. Developer
-6. Allow Remote Automation
-
-Then run:
+Start the application first:
 
 ```bash
-mvn test
+mvn spring-boot:run
+```
+
+In a second terminal, run the Serenity acceptance suite:
+
+```bash
+mvn -Dtest=AcceptanceTestSuite test
 ```
 
 The acceptance scenarios are defined in `src/test/resources/features/raw_material_crud.feature`.
+They drive the UI through Chrome against `http://localhost:8080`.
+Before each scenario, they remove only raw materials with the `AT-RM-` test-code prefix through the UI.
