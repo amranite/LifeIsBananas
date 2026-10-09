@@ -2,17 +2,25 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Life Is Bananas</title>
+    <title>Life Is Bananas Security</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}">Header</div>
 <main class="page">
     <section class="hero">
-        <p class="eyebrow">Life Is Bananas</p>
-        <h1>Raw material administration for the banana lab</h1>
-        <p>Register, inspect, update, and remove the ingredients used in experimental banana products.</p>
-        <a class="button" th:href="@{/raw-materials}">Open raw material catalogue</a>
+        <p class="eyebrow">Part 4 Prototype</p>
+        <h1>Secure raw material management for Life Is Bananas</h1>
+        <p>
+            This prototype demonstrates validation, authentication, and authorization with Spring Boot,
+            Spring MVC, Thymeleaf, JPA, and Spring Security.
+        </p>
+        <div class="actions-row">
+            <a class="button" th:href="@{/login}">Login</a>
+            <a class="button ghost" th:href="@{/raw-materials}">Open catalogue</a>
+        </div>
     </section>
 </main>
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
 </body>
 </html>

@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer class="site-footer" th:fragment="footer">
+    <div class="shell">
+        <p>&copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2026</span> Life Is Bananas</p>
+    </div>
+</footer>
+</body>
+</html>

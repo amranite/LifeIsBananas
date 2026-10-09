@@ -26,3 +26,17 @@ ON DUPLICATE KEY UPDATE
   price = VALUES(price),
   amount = VALUES(amount),
   unit = VALUES(unit);
+
+CREATE TABLE IF NOT EXISTS persons (
+  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS roles (
+  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  role_name VARCHAR(255) NOT NULL,
+  person_id BIGINT NOT NULL,
+  CONSTRAINT fk_roles_person FOREIGN KEY (person_id) REFERENCES persons(id)
+);

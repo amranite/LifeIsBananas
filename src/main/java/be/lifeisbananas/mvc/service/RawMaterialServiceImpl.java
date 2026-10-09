@@ -7,6 +7,8 @@ import java.util.OptionalInt;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +32,7 @@ public class RawMaterialServiceImpl implements RawMaterialService {
     @Override
     public RawMaterial findById(Long id) {
         return rawMaterialRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown raw material id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown raw material"));
     }
 
     @Override

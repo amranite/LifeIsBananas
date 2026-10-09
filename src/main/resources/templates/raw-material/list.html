@@ -1,18 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Raw Materials</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}">Header</div>
 <main class="page">
     <div class="page-header">
         <div>
             <p class="eyebrow">Catalogue</p>
             <h1>Raw materials</h1>
         </div>
-        <a class="button" th:href="@{/raw-materials/new}">Register new raw material</a>
+        <a class="button" sec:authorize="hasAuthority('BIO_ENGINEER')" th:href="@{/raw-materials/new}">
+            Register new raw material
+        </a>
     </div>
 
     <table class="data-table">
@@ -40,8 +43,10 @@
             <td th:text="${rawMaterial.unit}"></td>
             <td class="actions">
                 <a th:href="@{/raw-materials/{id}(id=${rawMaterial.id})}">Details</a>
-                <a th:href="@{/raw-materials/{id}/edit(id=${rawMaterial.id})}">Edit</a>
-                <form th:action="@{/raw-materials/{id}/delete(id=${rawMaterial.id})}" method="post">
+                <a sec:authorize="hasAuthority('BIO_ENGINEER')"
+                   th:href="@{/raw-materials/{id}/edit(id=${rawMaterial.id})}">Edit</a>
+                <form sec:authorize="hasAuthority('BIO_ENGINEER')"
+                      th:action="@{/raw-materials/{id}/delete(id=${rawMaterial.id})}" method="post">
                     <button type="submit" class="link-button">Delete</button>
                 </form>
             </td>
@@ -49,5 +54,6 @@
         </tbody>
     </table>
 </main>
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
 </body>
 </html>
