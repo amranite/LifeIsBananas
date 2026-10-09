@@ -2,6 +2,7 @@ package be.lifeisbananas;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Recipe {
@@ -103,5 +104,5 @@ public class Recipe {
     public RecipeStatus getStatus()        { return status; }
     public Integer getRecipeID()           { return recipeID; }
     public String getName()                { return name; }
-    public List<Ingredient> getIngredients() { return ingredients; }
+    public List<Ingredient> getIngredients() { return Collections.unmodifiableList(ingredients); }
 }

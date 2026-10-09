@@ -1,12 +1,21 @@
 package be.lifeisbananas.service;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 
 import be.lifeisbananas.*;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * One sequential recipe/product workflow per instance, used by the coursework demo.
+ * This is not a catalogue or a service shared by multiple concurrent users.
+ * Spring creates a fresh workflow for each bean lookup; manual callers own their instance.
+ */
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ServiceImpl {
 
 
@@ -21,6 +30,7 @@ public class ServiceImpl {
     }
 
     // Constructor Injection (beste manier)
+    @Autowired
     public ServiceImpl(IPromote promoteService) {
         this.promoteService = promoteService;
     }
