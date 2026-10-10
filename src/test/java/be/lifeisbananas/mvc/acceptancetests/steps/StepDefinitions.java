@@ -124,6 +124,11 @@ public class StepDefinitions {
         if (driver == null) {
             driver = new ChromeDriver();
             wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            driver.navigate().to(BASE_URL + "/login");
+            driver.findElement(By.id("username")).sendKeys("hannah.peel@example.test");
+            driver.findElement(By.id("password")).sendKeys("banana123");
+            driver.findElement(By.cssSelector("form button[type=submit]")).click();
+            wait.until(ExpectedConditions.urlContains("/menu.html"));
         }
     }
 

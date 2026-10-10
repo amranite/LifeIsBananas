@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bio-engineer Area</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+<main class="page narrow">
+    <section class="card details-grid">
+        <p class="eyebrow">Bio-engineer Area</p>
+        <h1>Raw material maintenance</h1>
+        <p>
+            Welcome <span th:text="${role.person.firstName}">First</span>
+            <span th:text="${role.person.lastName}">Last</span>.
+        </p>
+        <p>Your current role is <strong th:text="${role.roleName}">BIO_ENGINEER</strong>.</p>
+        <p>You can create, edit, inspect, and delete raw materials.</p>
+        <a class="button" th:href="@{/raw-materials}">Open raw material catalogue</a>
+    </section>
+</main>
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
+</body>
+</html>

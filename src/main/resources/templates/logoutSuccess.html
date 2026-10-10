@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Logged Out</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+<main class="page narrow">
+    <section class="card details-grid">
+        <p class="eyebrow">Session</p>
+        <h1>You have been logged out</h1>
+        <a class="button" th:href="@{/login}">Login again</a>
+    </section>
+</main>
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
+</body>
+</html>

@@ -4,6 +4,7 @@ import be.lifeisbananas.mvc.domain.RawMaterial;
 import be.lifeisbananas.mvc.domain.UnitType;
 import be.lifeisbananas.mvc.service.RawMaterialService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,12 +30,14 @@ public class RawMaterialController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('BIO_ENGINEER', 'WAREHOUSE_MANAGER')")
     public String showList(Model model) {
         model.addAttribute("rawMaterials", rawMaterialService.findAll());
         return "raw-material/list";
     }
 
     @GetMapping("/new")
+    @PreAuthorize("hasAuthority('BIO_ENGINEER')")
     public String showCreateForm(Model model) {
         RawMaterial rawMaterial = new RawMaterial();
         rawMaterial.setCode(rawMaterialService.generateNextCode());
@@ -44,9 +47,11 @@ public class RawMaterialController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('BIO_ENGINEER')")
     public String create(@Valid @ModelAttribute("rawMaterial") RawMaterial rawMaterial,
                          BindingResult bindingResult,
                          Model model) {
+        rawMaterial.setId(null);
         validateCodeUniqueness(rawMaterial, bindingResult);
         if (bindingResult.hasErrors()) {
             populateForm(model, "Register Raw Material", "/raw-materials");
@@ -57,12 +62,14 @@ public class RawMaterialController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('BIO_ENGINEER', 'WAREHOUSE_MANAGER')")
     public String showDetails(@PathVariable Long id, Model model) {
         model.addAttribute("rawMaterial", rawMaterialService.findById(id));
         return "raw-material/details";
     }
 
     @GetMapping("/{id}/edit")
+    @PreAuthorize("hasAuthority('BIO_ENGINEER')")
     public String showEditForm(@PathVariable Long id, Model model) {
         model.addAttribute("rawMaterial", rawMaterialService.findById(id));
         populateForm(model, "Edit Raw Material", "/raw-materials/" + id);
@@ -70,10 +77,12 @@ public class RawMaterialController {
     }
 
     @PostMapping("/{id}")
+    @PreAuthorize("hasAuthority('BIO_ENGINEER')")
     public String update(@PathVariable Long id,
                          @Valid @ModelAttribute("rawMaterial") RawMaterial rawMaterial,
                          BindingResult bindingResult,
                          Model model) {
+        rawMaterialService.findById(id);
         rawMaterial.setId(id);
         validateCodeUniqueness(rawMaterial, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -85,6 +94,7 @@ public class RawMaterialController {
     }
 
     @PostMapping("/{id}/delete")
+    @PreAuthorize("hasAuthority('BIO_ENGINEER')")
     public String delete(@PathVariable Long id) {
         rawMaterialService.deleteById(id);
         return "redirect:/raw-materials";

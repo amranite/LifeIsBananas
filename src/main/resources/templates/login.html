@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+<main class="page narrow">
+    <section class="card auth-card">
+        <p class="eyebrow">Raw material catalogue</p>
+        <h1>Sign in to Life Is Bananas</h1>
+        <p>Sign in with your catalogue account. The disposable demo accounts are shown below when demo mode is active.</p>
+
+        <div th:if="${param.error}" class="error-banner">
+            Unable to login. Check your email and password.
+        </div>
+
+        <form class="form-grid" method="post" th:action="@{/login}">
+            <label for="username">Email</label>
+            <input id="username" name="username" type="text">
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password">
+
+            <button class="button" type="submit">Login</button>
+        </form>
+
+        <div class="seed-box" th:if="${demoMode}">
+            <p><strong>Bio-engineer:</strong> hannah.peel@example.test / banana123</p>
+            <p><strong>Warehouse manager:</strong> marcus.store@example.test / warehouse123</p>
+            <p><strong>Multi-role:</strong> nina.cross@example.test / multi123</p>
+        </div>
+    </section>
+</main>
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
+</body>
+</html>

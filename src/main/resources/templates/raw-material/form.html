@@ -6,11 +6,12 @@
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}">Header</div>
 <main class="page narrow">
     <div class="page-header">
         <div>
             <p class="eyebrow">Maintenance</p>
-            <h1 th:text="${pageTitle}"></h1>
+            <h1 th:text="${pageTitle}">Raw material form</h1>
         </div>
         <a class="button ghost" th:href="@{/raw-materials}">Back to list</a>
     </div>
@@ -48,5 +49,6 @@
         <button id="submit" name="submit" class="button" type="submit">Save raw material</button>
     </form>
 </main>
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
 </body>
 </html>

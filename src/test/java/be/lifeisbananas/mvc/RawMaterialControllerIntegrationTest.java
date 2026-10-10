@@ -1,5 +1,8 @@
 package be.lifeisbananas.mvc;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import org.springframework.security.test.context.support.WithMockUser;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+@WithMockUser(username = "hannah.peel@example.test", authorities = "BIO_ENGINEER")
 @SpringBootTest
 @AutoConfigureMockMvc
 class RawMaterialControllerIntegrationTest {
@@ -59,7 +63,7 @@ class RawMaterialControllerIntegrationTest {
 
     @Test
     void shouldCreateUpdateAndDeleteRawMaterial() throws Exception {
-        mockMvc.perform(post("/raw-materials")
+        mockMvc.perform(post("/raw-materials").with(csrf())
                         .param("code", "RM-101")
                         .param("name", "Freeze-Dried Banana Flakes")
                         .param("amount", "5.50")
@@ -74,7 +78,7 @@ class RawMaterialControllerIntegrationTest {
         assertThat(saved.getAmount()).isEqualTo(5.50);
         assertThat(saved.isOrganicCertified()).isTrue();
 
-        mockMvc.perform(post("/raw-materials/" + saved.getId())
+        mockMvc.perform(post("/raw-materials/" + saved.getId()).with(csrf())
                         .param("code", "RM-101")
                         .param("name", "Freeze-Dried Banana Flakes Premium")
                         .param("amount", "7.25")
@@ -89,7 +93,7 @@ class RawMaterialControllerIntegrationTest {
         assertThat(updated.getAmount()).isEqualTo(7.25);
         assertThat(updated.getPrice()).isEqualTo(9.10);
 
-        mockMvc.perform(post("/raw-materials/" + saved.getId() + "/delete"))
+        mockMvc.perform(post("/raw-materials/" + saved.getId() + "/delete").with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/raw-materials"));
 
@@ -106,7 +110,7 @@ class RawMaterialControllerIntegrationTest {
         existing.setUnit(UnitType.KG);
         rawMaterialRepository.save(existing);
 
-        mockMvc.perform(post("/raw-materials")
+        mockMvc.perform(post("/raw-materials").with(csrf())
                         .param("code", "RM-101")
                         .param("name", "Duplicate Material")
                         .param("amount", "4.00")

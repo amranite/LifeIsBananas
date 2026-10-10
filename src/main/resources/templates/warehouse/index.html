@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Warehouse Area</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+<main class="page narrow">
+    <section class="card details-grid">
+        <p class="eyebrow">Warehouse Area</p>
+        <h1>Catalogue consultation</h1>
+        <p>
+            Welcome <span th:text="${role.person.firstName}">First</span>
+            <span th:text="${role.person.lastName}">Last</span>.
+        </p>
+        <p>Your current role is <strong th:text="${role.roleName}">WAREHOUSE_MANAGER</strong>.</p>
+        <p>You can inspect the raw material catalogue, but you cannot create, edit, or delete entries.</p>
+        <a class="button" th:href="@{/raw-materials}">Open raw material catalogue</a>
+    </section>
+</main>
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
+</body>
+</html>
