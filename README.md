@@ -1,10 +1,32 @@
-# Life Is Bananas — domain and design-pattern exercises
+# Life Is Bananas — Java coursework
 
-Academic Java exercises modelling recipe approval and product development. `main` is the runnable baseline; branches retain course checkpoints and alternative implementations.
+Academic Java coursework covering domain rules, design patterns, MVC and authentication. Each branch contains a complete version of its course stage, with its own build and startup instructions.
+
+| Stage | Branch | What to explore |
+| --- | --- | --- |
+| Domain and design patterns | `main` and the learning branches below | Recipe approval, product development and architecture exercises |
+| MVC | [web/mvc](https://github.com/amranite/LifeIsBananas/tree/web/mvc) | Raw-material catalogue CRUD with Spring MVC, JPA and Thymeleaf |
+| Secured web application | [web/security](https://github.com/amranite/LifeIsBananas/tree/web/security) | Catalogue CRUD plus database-backed login, roles and CSRF protection |
+
+For the complete web demo, use Java 21 and Maven:
+
+```sh
+git switch web/security
+mvn spring-boot:run
+```
+
+Open `http://localhost:8080/`. The branch README lists the fictional demo accounts. No database setup is required for the default in-memory demo. Run `mvn test` for its 18 integration tests. The earlier `web/mvc` stage has four integration tests.
+
+The MVC and Security stages were originally developed in separate repositories. Their original commits, author metadata and hashes are imported unchanged into these branches. New merge commits connect them to the original domain history. This repository now provides one home for those stages; the desktop application remains a separate project.
+
+## Domain baseline and learning branches
+
+`main` keeps the runnable domain baseline. Switch back to it for these exercises:
 
 Use Java 21 and Maven:
 
 ```sh
+git switch main
 mvn test
 java -cp target/classes org.example.Main
 ```
